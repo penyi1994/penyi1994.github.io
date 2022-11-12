@@ -14,7 +14,7 @@
 <meta property="og:description" content="題意:給定N, M從「兩數平方和」(p^2 + q^2)的集合中, 0 &lt;&#x3D; p,q &lt;&#x3D; M有哪些長度至少N的等差數列? 直觀的暴搜題 稍微把重複的事情省下來就不會超時了我做了兩件事 (1)枚舉公差時, 沒有必要 1 ~ M * M * 2都枚舉如果要形成長度N的等差數列至少會有N-1個公差的距離否則第N個元素會直接大於M * M * 2所以枚舉1 ~ M * M">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-11-12T14:15:00.000Z">
-<meta property="article:modified_time" content="2022-11-12T14:29:53.271Z">
+<meta property="article:modified_time" content="2022-11-12T14:34:59.048Z">
 <meta property="article:author" content="PenYi">
 <meta property="article:tag" content="USACO">
 <meta name="twitter:card" content="summary">
@@ -110,6 +110,7 @@
 <p>首項也是等差數列的一部分<br>必須也是「兩數平方和」</p>
 <p>天真的作法是<br>每次枚舉新的公差進來<br>都判斷一次0 ~ M* M * 2是不是「兩數平方和」</p>
 <p>完全可以事先把首項準備好</p>
+<p>然後注意枚舉到大於M * M * 2的數字時會access memory out of bound<br>所以我故意宣告成M * M * 3</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: ariprog</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;ariprog.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;ariprog.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, M;</span><br><span class="line">  <span class="type">bool</span> isBiSquare[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="type">bool</span> hasProgression = <span class="literal">false</span>;</span><br><span class="line">  <span class="type">int</span> start[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>];</span><br><span class="line">  <span class="type">int</span> startSize = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N &gt;&gt; M;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= M; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= M; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!isBiSquare[i * i + j * j]) &#123;</span><br><span class="line">        isBiSquare[i * i + j * j] = <span class="literal">true</span>;</span><br><span class="line">        start[startSize] = i * i + j * j;</span><br><span class="line">        startSize++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">sort</span>(start, start + startSize);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> diff = <span class="number">1</span>; diff &lt;= (M * M * <span class="number">2</span>) / (N - <span class="number">1</span>); diff++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; startSize; i++) &#123;</span><br><span class="line">      <span class="type">int</span> startNumber = start[i];</span><br><span class="line">      <span class="type">bool</span> isProgression = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isBiSquare[startNumber + diff * j]) &#123;</span><br><span class="line">          isProgression = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (isProgression) &#123;</span><br><span class="line">        cout &lt;&lt; startNumber &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; diff &lt;&lt; endl;</span><br><span class="line">        hasProgression = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (!hasProgression)</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;NONE&quot;</span> &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
       
     </div>
@@ -198,6 +199,54 @@
         
           <li>
             <a href="/2022-11-05-USACO-Section-1-4-Prime-Cryptarithm.html">[USACO] Section 1.4 Prime Cryptarithm</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html">[USACO] Section 1.4 Barn Repair</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html">[USACO] Section 1.4 Mixing Milk</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-16-USACO-Section-1-3-Dual-Palindromes.html">[USACO] Section 1.3 Dual Palindromes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-16-USACO-Section-1-3-Palindromic-Squares.html">[USACO] Section 1.3 Palindromic Squares</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html">[USACO] Section 1.3 Name That Number</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-15-USACO-Section-1-3-Transformations.html">[USACO] Section 1.3 Transformations</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-11-USACO-Section-1-3-Milking-Cows.html">[USACO] Section 1.3 Milking Cows</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-10-USACO-Section-1-2-Broken-Necklace.html">[USACO] Section 1.2 Broken Necklace</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-10-USACO-Section-1-2-Friday-the-Thirteenth.html">[USACO] Section 1.2 Friday the Thirteenth</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-10-USACO-Section-1-2-Your-Ride-Is-Here.html">[USACO] Section 1.2 Your Ride Is Here</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-10-USACO-Section-1-2-Greedy-Gift-Givers.html">[USACO] Section 1.2 Greedy Gift Givers</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-07-hello-world.html">Hello World</a>
           </li>
         
       </ul>
