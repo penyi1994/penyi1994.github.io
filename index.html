@@ -77,6 +77,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-2-1-Ordered-Fractions" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html" class="article-date">
+  <time class="dt-published" datetime="2022-11-27T15:57:00.000Z" itemprop="datePublished">2022-11-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html">[USACO] Section 2.1 Ordered Fractions</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>簡單題</p>
+<p>裝模作樣的練習了一下C++的基本概念<br>本題重點<br>(1) override &lt;&lt; ostream operator, 可以直接把class餵給cout<br>(2) overide &#x3D;&#x3D; operator, 可以直接做sort<br>(3) function call pass by reference<br>(4) range-based for loop<br>(5) STL vector, erase會調整size!! (但不會影響capacity)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: frac1</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;frac1.out&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;frac1.in&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Fraction</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="type">int</span> A; <span class="comment">// numerator</span></span><br><span class="line">  <span class="type">int</span> B; <span class="comment">// denominator</span></span><br><span class="line">  <span class="built_in">Fraction</span>(<span class="type">int</span> a, <span class="type">int</span> b) : <span class="built_in">A</span>(a), <span class="built_in">B</span>(b) &#123;&#125;</span><br><span class="line">  <span class="keyword">friend</span> ostream&amp; <span class="keyword">operator</span>&lt;&lt;(ostream&amp;, <span class="type">const</span> Fraction&amp;);</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> Fraction&amp; rhs) <span class="type">const</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>-&gt;A * rhs.B &lt; rhs.A * <span class="keyword">this</span>-&gt;B;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> Fraction&amp; rhs) <span class="type">const</span> &#123;</span><br><span class="line">    <span class="built_in">return</span> (<span class="keyword">this</span>-&gt;A == rhs.A &amp;&amp; <span class="keyword">this</span>-&gt;B == rhs.B) || (<span class="keyword">this</span>-&gt;A == <span class="number">0</span> &amp;&amp; rhs.A == <span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">ostream&amp; <span class="keyword">operator</span>&lt;&lt;(ostream&amp; os, <span class="type">const</span> Fraction&amp; frac) &#123;</span><br><span class="line">  os &lt;&lt; frac.A &lt;&lt; <span class="string">&quot;/&quot;</span> &lt;&lt; frac.B &lt;&lt; endl;</span><br><span class="line">  <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">reduction</span><span class="params">(Fraction &amp;frac)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= frac.B; i++) &#123;</span><br><span class="line">    <span class="keyword">while</span> (frac.A % i == <span class="number">0</span> &amp;&amp; frac.B % i == <span class="number">0</span>) &#123;</span><br><span class="line">      frac.A /= i;</span><br><span class="line">      frac.B /= i;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> N;</span><br><span class="line">  vector&lt;Fraction&gt; v;</span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= i; j++)</span><br><span class="line">      v.<span class="built_in">push_back</span>(<span class="built_in">Fraction</span>(j, i));</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;tmp : v)</span><br><span class="line">    <span class="built_in">reduction</span>(tmp);</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">sort</span>(v.<span class="built_in">begin</span>(), v.<span class="built_in">end</span>());</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Eliminate redundant fraction in the sorted array</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; v.<span class="built_in">size</span>() - <span class="number">1</span>; i++)</span><br><span class="line">    <span class="keyword">while</span> (i + <span class="number">1</span> &lt; v.<span class="built_in">size</span>() &amp;&amp; v[i] == v[i + <span class="number">1</span>])</span><br><span class="line">      v.<span class="built_in">erase</span>(v.<span class="built_in">begin</span>() + i + <span class="number">1</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;tmp : v)</span><br><span class="line">    cout &lt;&lt; tmp;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html" data-id="clazjorwe0000igwh0pf0ba09" data-title="[USACO] Section 2.1 Ordered Fractions" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-2-1-The-Castle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-11-27-USACO-Section-2-1-The-Castle.html" class="article-date">
@@ -465,48 +507,6 @@
 
 
   
-    <article id="post-USACO-Section-1-4-Combination-Lock" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-11-06-USACO-Section-1-4-Combination-Lock.html" class="article-date">
-  <time class="dt-published" datetime="2022-11-06T09:54:00.000Z" itemprop="datePublished">2022-11-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-11-06-USACO-Section-1-4-Combination-Lock.html">[USACO] Section 1.4 Combination Lock</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>簡單題</p>
-<p>記得不要拿負數去取餘數<br>C語言是向0方向<br>有些語言則是向負無窮方向</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: combo</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;combo.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;combo.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N;</span><br><span class="line">  <span class="type">int</span> lockJohn[<span class="number">3</span>];</span><br><span class="line">  <span class="type">int</span> LockMaster[<span class="number">3</span>];</span><br><span class="line">  <span class="type">bool</span> used[<span class="number">101</span>][<span class="number">101</span>][<span class="number">101</span>];</span><br><span class="line">  <span class="type">int</span> ans;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; N) &#123;</span><br><span class="line">    cin &gt;&gt; lockJohn[<span class="number">0</span>] &gt;&gt; lockJohn[<span class="number">1</span>] &gt;&gt; lockJohn[<span class="number">2</span>];</span><br><span class="line">    cin &gt;&gt; LockMaster[<span class="number">0</span>] &gt;&gt; LockMaster[<span class="number">1</span>] &gt;&gt; LockMaster[<span class="number">2</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">memset</span>(used, <span class="number">0</span>, <span class="built_in">sizeof</span>(used));</span><br><span class="line">    </span><br><span class="line">    ans = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> a, b, c, d, e, f;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">-2</span>; i &lt;= <span class="number">2</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">-2</span>; j &lt;= <span class="number">2</span>; j++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">-2</span>; k &lt;= <span class="number">2</span>; k++) &#123;</span><br><span class="line">          a = ((lockJohn[<span class="number">0</span>] % N) + i + N) % N;</span><br><span class="line">          b = ((lockJohn[<span class="number">1</span>] % N) + j + N) % N;</span><br><span class="line">          c = ((lockJohn[<span class="number">2</span>] % N) + k + N) % N;</span><br><span class="line">          d = ((LockMaster[<span class="number">0</span>] % N) + i + N) % N;</span><br><span class="line">          e = ((LockMaster[<span class="number">1</span>] % N) + j + N) % N;</span><br><span class="line">          f = ((LockMaster[<span class="number">2</span>] % N) + k + N) % N;</span><br><span class="line">          </span><br><span class="line">          <span class="keyword">if</span> (!used[a][b][c]) &#123;</span><br><span class="line">            used[a][b][c] = <span class="literal">true</span>;</span><br><span class="line">            ans++;</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">          <span class="keyword">if</span> (!used[d][e][f]) &#123;</span><br><span class="line">            used[d][e][f] = <span class="literal">true</span>;</span><br><span class="line">            ans++;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-11-06-USACO-Section-1-4-Combination-Lock.html" data-id="cla56gvz10000egwh43cf3cqr" data-title="[USACO] Section 1.4 Combination Lock" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -555,6 +555,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html">[USACO] Section 2.1 Ordered Fractions</a>
+          </li>
         
           <li>
             <a href="/2022-11-27-USACO-Section-2-1-The-Castle.html">[USACO] Section 2.1 The Castle</a>
@@ -630,10 +634,6 @@
         
           <li>
             <a href="/2022-10-10-USACO-Section-1-2-Broken-Necklace.html">[USACO] Section 1.2 Broken Necklace</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-10-USACO-Section-1-2-Friday-the-Thirteenth.html">[USACO] Section 1.2 Friday the Thirteenth</a>
           </li>
         
       </ul>
