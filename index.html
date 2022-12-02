@@ -77,6 +77,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-2-1-Hamming-Codes" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html" class="article-date">
+  <time class="dt-published" datetime="2022-12-02T15:13:00.000Z" itemprop="datePublished">2022-12-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>暴搜</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: hamming</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;hamming.out&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;hamming.in&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> N, B, D;</span><br><span class="line"><span class="type">int</span> arr[<span class="number">70</span>];</span><br><span class="line"><span class="type">bool</span> foundAns;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">HammingDistance</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; B; i++)</span><br><span class="line">    <span class="keyword">if</span> ((x &amp; (<span class="number">1</span> &lt;&lt; i)) ^ (y &amp; (<span class="number">1</span> &lt;&lt; i)))</span><br><span class="line">      cnt++;</span><br><span class="line">  <span class="keyword">return</span> cnt;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isLegal</span><span class="params">(<span class="type">int</span> idx, <span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; idx; i++)</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">HammingDistance</span>(arr[i], x) &lt; D)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">backtrack</span><span class="params">(<span class="type">int</span> idx)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (foundAns)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  <span class="keyword">if</span> (idx &gt; N) &#123;</span><br><span class="line">    foundAns = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (i % <span class="number">10</span> == <span class="number">1</span>)</span><br><span class="line">        cout &lt;&lt; arr[i];</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (i % <span class="number">10</span> == <span class="number">0</span> &amp;&amp; i != N)</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; arr[i] &lt;&lt; endl;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; arr[i];</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = arr[idx - <span class="number">1</span>]; i &lt;= (<span class="number">1</span> &lt;&lt; B) - <span class="number">1</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">isLegal</span>(idx, i)) &#123;</span><br><span class="line">      arr[idx] = i;</span><br><span class="line">      <span class="built_in">backtrack</span>(idx + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  cin &gt;&gt; N &gt;&gt; B &gt;&gt;D;</span><br><span class="line">  </span><br><span class="line">  foundAns = <span class="literal">false</span>;</span><br><span class="line">  <span class="built_in">memset</span>(arr, <span class="number">0</span>, <span class="built_in">sizeof</span>(arr));</span><br><span class="line">  <span class="built_in">backtrack</span>(<span class="number">1</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-12-02-USACO-Section-2-1-Hamming-Codes.html" data-id="clb6nb37200001cwhaxuh404h" data-title="[USACO] Section 2.1 Hamming Codes" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-2-1-Healthy-Holsteins" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-11-30-USACO-Section-2-1-Healthy-Holsteins.html" class="article-date">
@@ -460,55 +501,6 @@
 
 
   
-    <article id="post-USACO-Section-1-5-Arithmetic-Progressions" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html" class="article-date">
-  <time class="dt-published" datetime="2022-11-12T14:15:00.000Z" itemprop="datePublished">2022-11-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html">[USACO] Section 1.5 Arithmetic Progressions</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>題意:<br>給定N, M<br>從「兩數平方和」(p^2 + q^2)的集合中, 0 &lt;&#x3D; p,q &lt;&#x3D; M<br>有哪些長度至少N的等差數列?</p>
-<p>直觀的暴搜題</p>
-<p>稍微把重複的事情省下來就不會超時了<br>我做了兩件事</p>
-<p>(1)<br>枚舉公差時, 沒有必要 1 ~ M * M * 2都枚舉<br>如果要形成長度N的等差數列<br>至少會有N-1個公差的距離<br>否則第N個元素會直接大於M * M * 2<br>所以枚舉1 ~ M * M * 2 &#x2F; (N - 1) 即可</p>
-<p>(2)<br>第一個維度枚舉公差<br>第二個維度枚舉首項</p>
-<p>首項也是等差數列的一部分<br>必須也是「兩數平方和」</p>
-<p>天真的作法是<br>每次枚舉新的公差進來<br>都判斷一次0 ~ M* M * 2是不是「兩數平方和」</p>
-<p>完全可以事先把首項準備好</p>
-<p>然後注意枚舉到大於M * M * 2的數字時會access memory out of bound<br>所以我故意宣告成M * M * 3</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: ariprog</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;ariprog.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;ariprog.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, M;</span><br><span class="line">  <span class="type">bool</span> isBiSquare[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="type">bool</span> hasProgression = <span class="literal">false</span>;</span><br><span class="line">  <span class="type">int</span> start[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>];</span><br><span class="line">  <span class="type">int</span> startSize = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N &gt;&gt; M;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= M; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= M; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!isBiSquare[i * i + j * j]) &#123;</span><br><span class="line">        isBiSquare[i * i + j * j] = <span class="literal">true</span>;</span><br><span class="line">        start[startSize] = i * i + j * j;</span><br><span class="line">        startSize++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">sort</span>(start, start + startSize);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> diff = <span class="number">1</span>; diff &lt;= (M * M * <span class="number">2</span>) / (N - <span class="number">1</span>); diff++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; startSize; i++) &#123;</span><br><span class="line">      <span class="type">int</span> startNumber = start[i];</span><br><span class="line">      <span class="type">bool</span> isProgression = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isBiSquare[startNumber + diff * j]) &#123;</span><br><span class="line">          isProgression = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (isProgression) &#123;</span><br><span class="line">        cout &lt;&lt; startNumber &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; diff &lt;&lt; endl;</span><br><span class="line">        hasProgression = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (!hasProgression)</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;NONE&quot;</span> &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html" data-id="clae0fldh0000b4wh68c8f2do" data-title="[USACO] Section 1.5 Arithmetic Progressions" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -546,7 +538,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
     </div>
   </div>
 
@@ -557,6 +549,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
+          </li>
         
           <li>
             <a href="/2022-11-30-USACO-Section-2-1-Healthy-Holsteins.html">[USACO] Section 2.1 Healthy Holsteins</a>
@@ -632,10 +628,6 @@
         
           <li>
             <a href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html">[USACO] Section 1.3 Name That Number</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-15-USACO-Section-1-3-Transformations.html">[USACO] Section 1.3 Transformations</a>
           </li>
         
       </ul>

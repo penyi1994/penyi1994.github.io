@@ -77,6 +77,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-1-5-Arithmetic-Progressions" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html" class="article-date">
+  <time class="dt-published" datetime="2022-11-12T14:15:00.000Z" itemprop="datePublished">2022-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html">[USACO] Section 1.5 Arithmetic Progressions</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>題意:<br>給定N, M<br>從「兩數平方和」(p^2 + q^2)的集合中, 0 &lt;&#x3D; p,q &lt;&#x3D; M<br>有哪些長度至少N的等差數列?</p>
+<p>直觀的暴搜題</p>
+<p>稍微把重複的事情省下來就不會超時了<br>我做了兩件事</p>
+<p>(1)<br>枚舉公差時, 沒有必要 1 ~ M * M * 2都枚舉<br>如果要形成長度N的等差數列<br>至少會有N-1個公差的距離<br>否則第N個元素會直接大於M * M * 2<br>所以枚舉1 ~ M * M * 2 &#x2F; (N - 1) 即可</p>
+<p>(2)<br>第一個維度枚舉公差<br>第二個維度枚舉首項</p>
+<p>首項也是等差數列的一部分<br>必須也是「兩數平方和」</p>
+<p>天真的作法是<br>每次枚舉新的公差進來<br>都判斷一次0 ~ M* M * 2是不是「兩數平方和」</p>
+<p>完全可以事先把首項準備好</p>
+<p>然後注意枚舉到大於M * M * 2的數字時會access memory out of bound<br>所以我故意宣告成M * M * 3</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: ariprog</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;ariprog.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;ariprog.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, M;</span><br><span class="line">  <span class="type">bool</span> isBiSquare[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="type">bool</span> hasProgression = <span class="literal">false</span>;</span><br><span class="line">  <span class="type">int</span> start[<span class="number">250</span> * <span class="number">250</span> * <span class="number">3</span> + <span class="number">1</span>];</span><br><span class="line">  <span class="type">int</span> startSize = <span class="number">0</span>;</span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N &gt;&gt; M;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= M; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= M; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!isBiSquare[i * i + j * j]) &#123;</span><br><span class="line">        isBiSquare[i * i + j * j] = <span class="literal">true</span>;</span><br><span class="line">        start[startSize] = i * i + j * j;</span><br><span class="line">        startSize++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">sort</span>(start, start + startSize);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> diff = <span class="number">1</span>; diff &lt;= (M * M * <span class="number">2</span>) / (N - <span class="number">1</span>); diff++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; startSize; i++) &#123;</span><br><span class="line">      <span class="type">int</span> startNumber = start[i];</span><br><span class="line">      <span class="type">bool</span> isProgression = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!isBiSquare[startNumber + diff * j]) &#123;</span><br><span class="line">          isProgression = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (isProgression) &#123;</span><br><span class="line">        cout &lt;&lt; startNumber &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; diff &lt;&lt; endl;</span><br><span class="line">        hasProgression = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (!hasProgression)</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;NONE&quot;</span> &lt;&lt; endl;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html" data-id="clae0fldh0000b4wh68c8f2do" data-title="[USACO] Section 1.5 Arithmetic Progressions" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-1-4-Ski-Course-Design" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-11-12-USACO-Section-1-4-Ski-Course-Design.html" class="article-date">
@@ -455,51 +504,6 @@
 
 
   
-    <article id="post-USACO-Section-1-3-Transformations" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-10-15-USACO-Section-1-3-Transformations.html" class="article-date">
-  <time class="dt-published" datetime="2022-10-15T09:37:00.000Z" itemprop="datePublished">2022-10-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-10-15-USACO-Section-1-3-Transformations.html">[USACO] Section 1.3 Transformations</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>簡單模擬題</p>
-<p>題目滿好笑的<br>如果是完全一樣的pattern<br>不能直接回答6<br>如果1到5會成立還是要回答1到5<br>滿智障的&#x3D; &#x3D;”</p>
-<p>本題重點</p>
-<p>(1)<br>override &#x3D;&#x3D; operator<br>如果是定義在class內<br>那this只能是left hand side<br>改成friend定義在外面lhs跟rhs才能有交換律</p>
-<p>(2) 二維陣列順時針轉90度意外的難呢…</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: transform</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXSIZE 20</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Pattern</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Pattern</span>()&#123;&#125;</span><br><span class="line">  <span class="built_in">Pattern</span>(<span class="type">int</span> x) : <span class="built_in">size</span>(x) &#123;&#125;</span><br><span class="line">  <span class="type">int</span> size;</span><br><span class="line">  string data[MAXSIZE];</span><br><span class="line">  <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> Pattern&amp;, <span class="type">const</span> Pattern&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> Pattern&amp; p0, <span class="type">const</span> Pattern&amp; p1) &#123;</span><br><span class="line">  <span class="type">int</span> N = p0.size;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++)</span><br><span class="line">      <span class="keyword">if</span> (p0.data[i][j] != p1.data[i][j])</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">rotate 90 degree</span></span><br><span class="line"><span class="comment">(i, j) ==&gt; (j, N-i-1)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="function">Pattern <span class="title">Rotate90</span><span class="params">(Pattern p)</span> </span>&#123;</span><br><span class="line">  Pattern tmp = p;</span><br><span class="line">  <span class="type">int</span> N = tmp.size;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++)</span><br><span class="line">      tmp.data[j][N - i - <span class="number">1</span>] = p.data[i][j];</span><br><span class="line">  <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Pattern <span class="title">Rotate180</span><span class="params">(Pattern p)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Rotate90</span>(<span class="built_in">Rotate90</span>(p));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Pattern <span class="title">Rotate270</span><span class="params">(Pattern p)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Rotate90</span>(<span class="built_in">Rotate90</span>(<span class="built_in">Rotate90</span>(p)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Pattern <span class="title">Reflect</span><span class="params">(Pattern p)</span> </span>&#123;</span><br><span class="line">  Pattern tmp = p;</span><br><span class="line">  <span class="type">int</span> N = tmp.size;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; N; j++)</span><br><span class="line">      tmp.data[i][j] = p.data[i][N - j - <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;transform.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;transform.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; N) &#123;</span><br><span class="line">    Pattern inputPattern = <span class="built_in">Pattern</span>(N);</span><br><span class="line">    Pattern targetPattern = <span class="built_in">Pattern</span>(N);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">      cin &gt;&gt; inputPattern.data[i];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">      cin &gt;&gt; targetPattern.data[i];</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate90</span>(inputPattern))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;1&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate180</span>(inputPattern))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;2&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate270</span>(inputPattern))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;3&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Reflect</span>(inputPattern))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;4&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate90</span>(<span class="built_in">Reflect</span>(inputPattern)))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;5&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate180</span>(<span class="built_in">Reflect</span>(inputPattern)))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;5&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == <span class="built_in">Rotate270</span>(<span class="built_in">Reflect</span>(inputPattern)))</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;5&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (targetPattern == inputPattern)</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;6&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;7&quot;</span> &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-10-15-USACO-Section-1-3-Transformations.html" data-id="cl99q64a10000lgwh0le782db" data-title="[USACO] Section 1.3 Transformations" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -537,7 +541,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
     </div>
   </div>
 
@@ -548,6 +552,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
+          </li>
         
           <li>
             <a href="/2022-11-30-USACO-Section-2-1-Healthy-Holsteins.html">[USACO] Section 2.1 Healthy Holsteins</a>
@@ -623,10 +631,6 @@
         
           <li>
             <a href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html">[USACO] Section 1.3 Name That Number</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-15-USACO-Section-1-3-Transformations.html">[USACO] Section 1.3 Transformations</a>
           </li>
         
       </ul>
