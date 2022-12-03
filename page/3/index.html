@@ -77,6 +77,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-1-3-Name-That-Number" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html" class="article-date">
+  <time class="dt-published" datetime="2022-10-15T15:44:00.000Z" itemprop="datePublished">2022-10-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html">[USACO] Section 1.3 Name That Number</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>簡單題</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: namenum</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DICTSIZE 5100</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">check</span><span class="params">(string number, string name, <span class="type">int</span> mapping[<span class="number">26</span>])</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(number.<span class="built_in">length</span>() != name.<span class="built_in">length</span>())</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> len = number.<span class="built_in">length</span>();</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; len; i++)</span><br><span class="line">    <span class="keyword">if</span>(number[i] - <span class="string">&#x27;0&#x27;</span> != mapping[name[i] - <span class="string">&#x27;A&#x27;</span>])</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;namenum.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;namenum.in&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">dictin</span> <span class="params">(<span class="string">&quot;dict.txt&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> mapping[<span class="number">26</span>];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) &#123;</span><br><span class="line">    mapping[i] = j / <span class="number">3</span> + <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span> (i != (<span class="string">&#x27;Q&#x27;</span>- <span class="string">&#x27;A&#x27;</span>) &amp;&amp; i != (<span class="string">&#x27;Z&#x27;</span> - <span class="string">&#x27;A&#x27;</span>))</span><br><span class="line">      j++;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> dictSize = <span class="number">0</span>;</span><br><span class="line">  string dict[DICTSIZE];</span><br><span class="line">  string input;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">while</span>(dictin &gt;&gt; dict[dictSize++]);</span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; input) &#123;</span><br><span class="line">    <span class="type">bool</span> hasValidName = <span class="literal">false</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; dictSize; i++)</span><br><span class="line">      <span class="keyword">if</span> (<span class="built_in">check</span>(input, dict[i], mapping)) &#123;</span><br><span class="line">        cout &lt;&lt; dict[i] &lt;&lt; endl;</span><br><span class="line">        hasValidName = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (!hasValidName)</span><br><span class="line">      cout &lt;&lt; <span class="string">&quot;NONE&quot;</span> &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-10-15-USACO-Section-1-3-Name-That-Number.html" data-id="cl9a39z6g0000eowhgf8n3qd0" data-title="[USACO] Section 1.3 Name That Number" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-1-3-Transformations" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-10-15-USACO-Section-1-3-Transformations.html" class="article-date">
@@ -435,6 +476,10 @@
       <ul>
         
           <li>
+            <a href="/2022-12-03-USACO-Section-2-2-Preface-Numbering.html">[USACO] Section 2.2 Preface Numbering</a>
+          </li>
+        
+          <li>
             <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
           </li>
         
@@ -508,10 +553,6 @@
         
           <li>
             <a href="/2022-10-16-USACO-Section-1-3-Palindromic-Squares.html">[USACO] Section 1.3 Palindromic Squares</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-15-USACO-Section-1-3-Name-That-Number.html">[USACO] Section 1.3 Name That Number</a>
           </li>
         
       </ul>
