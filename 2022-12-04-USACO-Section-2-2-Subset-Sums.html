@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>[USACO] Section 2.2 Subset Sums | PenYi1994</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="經典DP題 arr[i]代表第i個數字令f(x,y)代表用前x個數字 湊出總和y的方法數則f(x, y) &#x3D; f(x-1, y) + f(x-1, y-arr[i]) f(x-1, y) 代表不用第x個數字, 也能湊出y的方法數f(x-1, y-arr[i]) 代表用到第x個數字 因為本題是問湊出總和一半的方法數所以得出來的f(N, sum&#x2F;2)要再除2 12345678910">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USACO] Section 2.2 Subset Sums">
+<meta property="og:url" content="https://penyi1994.github.io/2022-12-04-USACO-Section-2-2-Subset-Sums.html">
+<meta property="og:site_name" content="PenYi1994">
+<meta property="og:description" content="經典DP題 arr[i]代表第i個數字令f(x,y)代表用前x個數字 湊出總和y的方法數則f(x, y) &#x3D; f(x-1, y) + f(x-1, y-arr[i]) f(x-1, y) 代表不用第x個數字, 也能湊出y的方法數f(x-1, y-arr[i]) 代表用到第x個數字 因為本題是問湊出總和一半的方法數所以得出來的f(N, sum&#x2F;2)要再除2 12345678910">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-04T12:25:00.000Z">
+<meta property="article:modified_time" content="2022-12-04T12:43:31.976Z">
+<meta property="article:author" content="PenYi">
+<meta property="article:tag" content="USACO">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="PenYi1994" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">PenYi1994</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Algorithm, Compiler, C++, Pwn</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/links">Links</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://penyi1994.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-USACO-Section-2-2-Subset-Sums" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-12-04-USACO-Section-2-2-Subset-Sums.html" class="article-date">
+  <time class="dt-published" datetime="2022-12-04T12:25:00.000Z" itemprop="datePublished">2022-12-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      [USACO] Section 2.2 Subset Sums
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>經典DP題</p>
+<p>arr[i]代表第i個數字<br>令f(x,y)代表用前x個數字 湊出總和y的方法數<br>則f(x, y) &#x3D; f(x-1, y) + f(x-1, y-arr[i])</p>
+<p>f(x-1, y) 代表不用第x個數字, 也能湊出y的方法數<br>f(x-1, y-arr[i]) 代表用到第x個數字</p>
+<p>因為本題是問湊出總和一半的方法數<br>所以得出來的f(N, sum&#x2F;2)要再除2</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: subset</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;subset.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;subset.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N;</span><br><span class="line">  <span class="type">int</span> sum;</span><br><span class="line">  <span class="type">long</span> <span class="type">long</span> <span class="type">int</span> dp[<span class="number">40</span>][(<span class="number">1</span> + <span class="number">39</span>) * <span class="number">39</span> / <span class="number">2</span>];</span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N;</span><br><span class="line">  sum = (<span class="number">1</span> + N) * N / <span class="number">2</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (sum % <span class="number">2</span> != <span class="number">0</span>) &#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;0&quot;</span> &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">memset</span>(dp, <span class="number">0</span>, <span class="built_in">sizeof</span>(dp));</span><br><span class="line">    sum = sum / <span class="number">2</span>;</span><br><span class="line">      </span><br><span class="line">    dp[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= N; i++) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= sum; j++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (j &gt;= i)</span><br><span class="line">          dp[i][j] = dp[i <span class="number">-1</span>][j] + dp[i - <span class="number">1</span>][j - i];</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          dp[i][j] = dp[i - <span class="number">1</span>][j];</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; dp[N][sum] / <span class="number">2</span> &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-12-04-USACO-Section-2-2-Subset-Sums.html" data-id="clb9c6u1v0000mgwh37h632gf" data-title="[USACO] Section 2.2 Subset Sums" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022-12-03-USACO-Section-2-2-Preface-Numbering.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">[USACO] Section 2.2 Preface Numbering</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/USACO/" style="font-size: 10px;">USACO</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022-12-04-USACO-Section-2-2-Subset-Sums.html">[USACO] Section 2.2 Subset Sums</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-03-USACO-Section-2-2-Preface-Numbering.html">[USACO] Section 2.2 Preface Numbering</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-30-USACO-Section-2-1-Healthy-Holsteins.html">[USACO] Section 2.1 Healthy Holsteins</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-29-USACO-Section-2-1-Sorting-a-Three-Valued-Sequence.html">[USACO] Section 2.1 Sorting a Three-Valued Sequence</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html">[USACO] Section 2.1 Ordered Fractions</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-27-USACO-Section-2-1-The-Castle.html">[USACO] Section 2.1 The Castle</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-20-USACO-Section-1-5-Checker-Challenge.html">[USACO] Section 1.5 Checker Challenge</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-19-USACO-Section-1-6-Superprime-Rib.html">[USACO] Section 1.6 Superprime Rib</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-19-USACO-Section-1-6-Prime-Palindromes.html">[USACO] Section 1.6 Prime Palindromes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-13-USACO-Section-1-6-Number-Triangles.html">[USACO] Section 1.6 Number Triangles</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-13-USACO-Section-1-5-Mother-s-Milk.html">[USACO] Section 1.5 Mother&#39;s Milk</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html">[USACO] Section 1.5 Arithmetic Progressions</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-4-Ski-Course-Design.html">[USACO] Section 1.4 Ski Course Design</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-4-Wormholes.html">[USACO] Section 1.4  Wormholes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-06-USACO-Section-1-4-Combination-Lock.html">[USACO] Section 1.4 Combination Lock</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-05-USACO-Section-1-4-Prime-Cryptarithm.html">[USACO] Section 1.4 Prime Cryptarithm</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html">[USACO] Section 1.4 Barn Repair</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html">[USACO] Section 1.4 Mixing Milk</a>
+          </li>
+        
+          <li>
+            <a href="/2022-10-16-USACO-Section-1-3-Dual-Palindromes.html">[USACO] Section 1.3 Dual Palindromes</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 PenYi<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/links" class="mobile-nav-link">Links</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
