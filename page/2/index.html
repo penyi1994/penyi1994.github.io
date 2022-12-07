@@ -77,6 +77,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-1-6-Superprime-Rib" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-11-19-USACO-Section-1-6-Superprime-Rib.html" class="article-date">
+  <time class="dt-published" datetime="2022-11-19T10:22:00.000Z" itemprop="datePublished">2022-11-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-11-19-USACO-Section-1-6-Superprime-Rib.html">[USACO] Section 1.6 Superprime Rib</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>暴搜</p>
+<p>Chapter1 搞定!!</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: sprime</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;sprime.out&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;sprime.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line"><span class="type">int</span> N;</span><br><span class="line"><span class="type">int</span> arr[<span class="number">10</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">isPrime</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i * i &lt;= x; i++)</span><br><span class="line">    <span class="keyword">if</span> (x % i == <span class="number">0</span>)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">makeNumber</span><span class="params">(<span class="type">int</span> Len)</span> </span>&#123;</span><br><span class="line">  <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; Len; i++)</span><br><span class="line">    x = x * <span class="number">10</span> + arr[i];</span><br><span class="line">  <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">backtrack</span><span class="params">(<span class="type">int</span> idx)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (idx &gt;= N)&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">      cout &lt;&lt; arr[i];</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= <span class="number">9</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (idx == <span class="number">0</span> &amp;&amp; (i == <span class="number">0</span> || i ==<span class="number">1</span>))</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    arr[idx] = i;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">isPrime</span>(<span class="built_in">makeNumber</span>(idx + <span class="number">1</span>)))</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    <span class="built_in">backtrack</span>(idx + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  cin &gt;&gt; N;</span><br><span class="line">  <span class="built_in">backtrack</span>(<span class="number">0</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-11-19-USACO-Section-1-6-Superprime-Rib.html" data-id="clans7eru0000z4whgnj558ch" data-title="[USACO] Section 1.6 Superprime Rib" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-1-6-Prime-Palindromes" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-11-19-USACO-Section-1-6-Prime-Palindromes.html" class="article-date">
@@ -462,52 +504,11 @@
 
 
   
-    <article id="post-USACO-Section-1-4-Mixing-Milk" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html" class="article-date">
-  <time class="dt-published" datetime="2022-10-16T14:28:00.000Z" itemprop="datePublished">2022-10-16</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html">[USACO] Section 1.4 Mixing Milk</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>簡單題</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: milk</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXSIZE 5001</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Item</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="type">int</span> price;</span><br><span class="line">  <span class="type">int</span> amount;</span><br><span class="line">  <span class="type">bool</span> <span class="keyword">operator</span>&lt;(<span class="type">const</span> Item&amp; rhs) <span class="type">const</span> &#123; </span><br><span class="line">    <span class="keyword">return</span> price &lt; rhs.price;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;milk.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;milk.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, M;</span><br><span class="line">  Item item[MAXSIZE];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; N &gt;&gt; M) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; M; i++)</span><br><span class="line">      cin &gt;&gt; item[i].price &gt;&gt; item[i].amount;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">sort</span>(item, item + M);</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> cost = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; M &amp;&amp; N &gt; <span class="number">0</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (N &gt; item[i].amount) &#123;</span><br><span class="line">        N -= item[i].amount;</span><br><span class="line">        cost += item[i].amount * item[i].price;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">        cost += item[i].price * N;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; cost &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-10-16-USACO-Section-1-4-Mixing-Milk.html" data-id="cl9bg27gh0000g0whbnfpezrt" data-title="[USACO] Section 1.4 Mixing Milk" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -551,6 +552,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-12-07-USACO-Section-2-2-Party-Lamps.html">[USACO] Section 2.2 Party Lamps</a>
+          </li>
         
           <li>
             <a href="/2022-12-04-USACO-Section-2-2-Runaround-Numbers.html">[USACO] Section 2.2 Runaround Numbers</a>
@@ -626,10 +631,6 @@
         
           <li>
             <a href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html">[USACO] Section 1.4 Barn Repair</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html">[USACO] Section 1.4 Mixing Milk</a>
           </li>
         
       </ul>
