@@ -77,6 +77,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-1-4-Barn-Repair" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html" class="article-date">
+  <time class="dt-published" datetime="2022-10-19T15:35:00.000Z" itemprop="datePublished">2022-10-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html">[USACO] Section 1.4 Barn Repair</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>滿有趣的一題</p>
+<p>題意:<br>給一個長度S的整數的數線, 從1到S<br>有C個點有放牛<br>給你最多M個線段<br>要把有牛的點都蓋住<br>求最少幾個點會被這M個線段蓋住</p>
+<p>原本想了一個對單一線段最大長度二分搜的作法<br>結果發現從左到右去蓋<br>如果有木板沒用完的話 是可以回頭修正的<br>所以是錯的QAQ</p>
+<p>正確的做法是<br>直接排序所有牛的間隔<br>能用M個線段就代表前M-1大的間隔可以被消掉</p>
+<p>當然<br>如果能用的線段比牛的數目多的話<br>就是每個牛都用長度為1的線段蓋住</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: barn1</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAXSIZE 201</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;barn1.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;barn1.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> M, S, C;</span><br><span class="line">  <span class="type">int</span> stall[MAXSIZE];</span><br><span class="line">  <span class="type">int</span> gap[MAXSIZE];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; M &gt;&gt; S &gt;&gt; C) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; C; i++) </span><br><span class="line">      cin &gt;&gt; stall[i];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (M &gt;= C) &#123;</span><br><span class="line">      cout &lt;&lt; C &lt;&lt; endl;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">sort</span>(stall, stall + C);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; C - <span class="number">1</span>; i++) </span><br><span class="line">      gap[i] = stall[i + <span class="number">1</span>] - stall[i] - <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> gapSize = C - <span class="number">1</span>; </span><br><span class="line">    <span class="type">int</span> ans = stall[C - <span class="number">1</span>] - stall[<span class="number">0</span>] + <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">sort</span>(gap, gap + gapSize);</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = gapSize - <span class="number">1</span>; i &gt; (gapSize - <span class="number">1</span>) - (M - <span class="number">1</span>); i--)</span><br><span class="line">      ans -= gap[i];</span><br><span class="line">    </span><br><span class="line">    cout &lt;&lt; ans &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-10-19-USACO-Section-1-4-Barn-Repair.html" data-id="cl9fsqgj7000014wh9bre9b9g" data-title="[USACO] Section 1.4 Barn Repair" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-1-4-Mixing-Milk" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-10-16-USACO-Section-1-4-Mixing-Milk.html" class="article-date">
@@ -458,47 +503,6 @@
 
 
   
-    <article id="post-USACO-Section-1-2-Greedy-Gift-Givers" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-10-10-USACO-Section-1-2-Greedy-Gift-Givers.html" class="article-date">
-  <time class="dt-published" datetime="2022-10-09T18:16:00.000Z" itemprop="datePublished">2022-10-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-10-10-USACO-Section-1-2-Greedy-Gift-Givers.html">[USACO] Section 1.2 Greedy Gift Givers</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>簡單題</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: gift1</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;gift1.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;gift1.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  string name[<span class="number">20</span>];</span><br><span class="line">  <span class="type">int</span> N;</span><br><span class="line">  map&lt;string, <span class="type">int</span>&gt; money;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(cin &gt;&gt; N) &#123;</span><br><span class="line">    money.<span class="built_in">clear</span>();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">      cin &gt;&gt; name[i];</span><br><span class="line">      money[name[i]] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">      string giver;</span><br><span class="line">      <span class="type">int</span> a, b;</span><br><span class="line">      </span><br><span class="line">      cin &gt;&gt; giver;</span><br><span class="line">      cin &gt;&gt; a &gt;&gt; b;</span><br><span class="line">      </span><br><span class="line">      string receiver;</span><br><span class="line">      <span class="keyword">if</span> (b &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        money[giver] = money[giver] - a + (a % b);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= b; j++) &#123;</span><br><span class="line">          cin &gt;&gt; receiver;</span><br><span class="line">          money[receiver] += (a / b);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">      cout &lt;&lt; name[i] &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; money[name[i]] &lt;&lt; endl;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-10-10-USACO-Section-1-2-Greedy-Gift-Givers.html" data-id="cl91o3bgi0003rkwhheuj1y04" data-title="[USACO] Section 1.2 Greedy Gift Givers" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -547,6 +551,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-12-09-USACO-Section-2-3-Longest-Prefix.html">[USACO] Section 2.3 Longest Prefix</a>
+          </li>
         
           <li>
             <a href="/2022-12-07-USACO-Section-2-2-Party-Lamps.html">[USACO] Section 2.2 Party Lamps</a>
@@ -622,10 +630,6 @@
         
           <li>
             <a href="/2022-11-05-USACO-Section-1-4-Prime-Cryptarithm.html">[USACO] Section 1.4 Prime Cryptarithm</a>
-          </li>
-        
-          <li>
-            <a href="/2022-10-19-USACO-Section-1-4-Barn-Repair.html">[USACO] Section 1.4 Barn Repair</a>
           </li>
         
       </ul>
