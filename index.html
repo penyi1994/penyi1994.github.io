@@ -77,6 +77,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-USACO-Section-2-3-Cow-Pedigrees" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html" class="article-date">
+  <time class="dt-published" datetime="2022-12-10T16:00:00.000Z" itemprop="datePublished">2022-12-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html">[USACO] Section 2.3 Cow Pedigrees</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>經典DP題:<br>給定 數N 樹高K<br>請問有幾種degree為0或2的二元樹?</p>
+<p>首先<br>當然可以很輕易地想到DP狀態轉移是 : 左子樹方法數乘以右子樹方法數<br>也就是以定義狀態為f(x, y) : 用x個點, 高度y, 能弄出幾種<br>那麼在狀態轉移時</p>
+<p>f(x, y) &#x3D; sum(f(k, h1) * f(x - k - 1, h2))</p>
+<p>其中 1 &lt;&#x3D; k &lt;&#x3D; x-1, 1 &lt;&#x3D; h1, h2 &lt;&#x3D; y-1</p>
+<p>k為左子樹的點數<br>x-k-1為柚子樹的點數</p>
+<p>h1為左子樹的高度<br>h2為柚子樹的高度</p>
+<p>赫然發現<br>問題變得更複雜了!!<br>居然要枚舉三個維度 : 左&#x2F;右子樹點數, 左子樹高度, 柚子樹高度<br>才能完成狀態轉移</p>
+<p>*「DP心得之一 : 狀態的選擇是很重要滴!!」</p>
+<p>把DP狀態改成 : f(x, y)為用x個點, 湊出「最大高度為y」的方法數<br>狀態轉移為f(x, y) &#x3D; sum(f(k, y-1) * f(x-k-1, y-1)), 1 &lt;&#x3D; k &lt;&#x3D; x-1</p>
+<p>則題目要求的剛好高度為y的方法數就是f(x, y) - f(x, y-1)</p>
+<p>用比較複雜的問題來解原問題, 反而比較比較輕鬆<br>其實大學何錦文教授有講過類似的概念<br>不過那時也沒在聽就是了<br>嘻嘻</p>
+<p>其實這題還有後續</p>
+<p>*「DP心得之二 : 狀態轉移是很重要滴!!」</p>
+<p>因為左右子樹長相是對稱的<br>所以還能省一半轉移的時間</p>
+<p>但注意兩邊點數一樣話就是同一種</p>
+<p>最後補充一下<br>所謂degree為0或2其實隱含的被描述在<br>狀態轉移時的k的範圍是 1 ~ x-2, 不可以有一邊的點數是0</p>
+<p>也就是說這題還能再推廣成「真正的」二元樹的方法數</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: nocows</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: nocows</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;nocows.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;nocows.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, H;</span><br><span class="line">  <span class="type">int</span> dp[<span class="number">201</span>][<span class="number">101</span>]; <span class="comment">// dp[i][j] for use i node, at most j height</span></span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N &gt;&gt; H;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">memset</span>(dp, <span class="number">0</span>, <span class="built_in">sizeof</span>(dp));</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= H; i++)</span><br><span class="line">    dp[<span class="number">1</span>][i] = <span class="number">1</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= H; j++) </span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= (i - <span class="number">1</span>) / <span class="number">2</span>; k++) </span><br><span class="line">        <span class="keyword">if</span> (k * <span class="number">2</span> == i<span class="number">-1</span>)</span><br><span class="line">          dp[i][j] = (dp[i][j] + dp[k][j - <span class="number">1</span>] * dp[i - k - <span class="number">1</span>][j - <span class="number">1</span>]) % <span class="number">9901</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          dp[i][j] = (dp[i][j] + <span class="number">2</span> * dp[k][j - <span class="number">1</span>] * dp[i - k - <span class="number">1</span>][j - <span class="number">1</span>]) % <span class="number">9901</span>;</span><br><span class="line"></span><br><span class="line">  cout &lt;&lt; (dp[N][H] - dp[N][H - <span class="number">1</span>] + <span class="number">9901</span>) % <span class="number">9901</span> &lt;&lt; endl;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html" data-id="clbi4j6w30000cwwh59zj9080" data-title="[USACO] Section 2.3 Cow Pedigrees" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-USACO-Section-2-3-Longest-Prefix" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022-12-09-USACO-Section-2-3-Longest-Prefix.html" class="article-date">
@@ -465,48 +522,6 @@
 
 
   
-    <article id="post-USACO-Section-2-1-The-Castle" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022-11-27-USACO-Section-2-1-The-Castle.html" class="article-date">
-  <time class="dt-published" datetime="2022-11-27T05:56:00.000Z" itemprop="datePublished">2022-11-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022-11-27-USACO-Section-2-1-The-Castle.html">[USACO] Section 2.1 The Castle</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>DFS簡單題</p>
-<p>題目出的超爛<br>到底優先要拿哪個牆壁?<br>farthest to the west 到底是越西越好還是越東越好?<br>真心看不懂<br>卡超久<br>最後直接找解答照抄找牆壁的部分才過ZZZZZ</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: castle</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> M, N;</span><br><span class="line"><span class="type">int</span> castle[<span class="number">101</span>][<span class="number">101</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> cnt;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> RoomLabel[<span class="number">101</span>][<span class="number">101</span>];</span><br><span class="line"><span class="type">int</span> RoomSize[<span class="number">101</span> * <span class="number">101</span>];</span><br><span class="line"><span class="type">int</span> RoomNumber;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> MaxRoomSize;</span><br><span class="line"><span class="type">int</span> MaxMergeRoomSize;</span><br><span class="line"><span class="type">int</span> RemoveWall_X;</span><br><span class="line"><span class="type">int</span> RemoveWall_Y;</span><br><span class="line"><span class="type">int</span> RemoveWall;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> vis[<span class="number">101</span>][<span class="number">101</span>];</span><br><span class="line"><span class="type">int</span> dx[<span class="number">4</span>] = &#123;<span class="number">-1</span>, <span class="number">0</span>,  <span class="number">0</span>, <span class="number">1</span>&#125;;</span><br><span class="line"><span class="type">int</span> dy[<span class="number">4</span>] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">0</span>&#125;;</span><br><span class="line"><span class="type">int</span> mask[<span class="number">4</span>] = &#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">8</span>&#125;;</span><br><span class="line"><span class="type">char</span> direction[<span class="number">4</span>] = &#123;<span class="string">&#x27;N&#x27;</span>, <span class="string">&#x27;E&#x27;</span>, <span class="string">&#x27;W&#x27;</span>, <span class="string">&#x27;S&#x27;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">  RoomLabel[x][y] = RoomNumber;</span><br><span class="line">  cnt++;</span><br><span class="line">  vis[x][y] = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">if</span> ((castle[x][y] &amp; mask[i]) == <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="type">int</span> dst_x = x + dx[i];</span><br><span class="line">      <span class="type">int</span> dst_y = y + dy[i];</span><br><span class="line">      <span class="keyword">if</span> (dst_x &gt;= <span class="number">1</span> &amp;&amp; dst_x &lt;= M &amp;&amp; dst_y &gt;= <span class="number">1</span> &amp;&amp; dst_y &lt;= N &amp;&amp; !vis[dst_x][dst_y]) &#123;</span><br><span class="line">        <span class="built_in">dfs</span>(dst_x, dst_y);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;castle.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;castle.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// N and M are confusing</span></span><br><span class="line">  cin &gt;&gt; N &gt;&gt; M;</span><br><span class="line">  <span class="built_in">memset</span>(castle, <span class="number">0</span>, <span class="built_in">sizeof</span>(castle));</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= M; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= N; j++)</span><br><span class="line">      cin &gt;&gt; castle[i][j];</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Solve RoomNumber</span></span><br><span class="line">  RoomNumber = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">memset</span>(vis, <span class="number">0</span>, <span class="built_in">sizeof</span>(vis));</span><br><span class="line">  <span class="built_in">memset</span>(RoomLabel, <span class="number">0</span>, <span class="built_in">sizeof</span>(RoomLabel));</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= M; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= N; j++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!vis[i][j]) &#123;</span><br><span class="line">        RoomNumber++;</span><br><span class="line">        cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">dfs</span>(i, j);</span><br><span class="line">        RoomSize[RoomNumber] = cnt;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Solve MaxRoomSize</span></span><br><span class="line">  MaxRoomSize = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= RoomNumber; i++)</span><br><span class="line">    MaxRoomSize = <span class="built_in">max</span>(MaxRoomSize, RoomSize[i]);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Solve MaxMergeRoomSize</span></span><br><span class="line">  MaxMergeRoomSize = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> y = <span class="number">1</span>; y &lt;= N; y++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x = M; x &gt;= <span class="number">1</span>; x--) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt;= <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="type">int</span> dst_x = x + dx[i];</span><br><span class="line">        <span class="type">int</span> dst_y = y + dy[i];</span><br><span class="line">        <span class="keyword">if</span> ((castle[x][y] &amp; mask[i]) == mask[i] &amp;&amp; RoomLabel[x][y] != RoomLabel[dst_x][dst_y]) &#123;</span><br><span class="line">          <span class="type">int</span> sum = RoomSize[RoomLabel[x][y]] + RoomSize[RoomLabel[dst_x][dst_y]];</span><br><span class="line">          <span class="keyword">if</span> (sum &gt; MaxMergeRoomSize) &#123;</span><br><span class="line">            MaxMergeRoomSize = sum;</span><br><span class="line">            RemoveWall_X = x;</span><br><span class="line">            RemoveWall_Y = y;</span><br><span class="line">            RemoveWall = i;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  cout &lt;&lt; RoomNumber &lt;&lt; endl;</span><br><span class="line">  cout &lt;&lt; MaxRoomSize &lt;&lt; endl;</span><br><span class="line">  cout &lt;&lt; MaxMergeRoomSize &lt;&lt; endl;</span><br><span class="line">  cout &lt;&lt; RemoveWall_X &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; RemoveWall_Y &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; direction[RemoveWall] &lt;&lt; endl;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://penyi1994.github.io/2022-11-27-USACO-Section-2-1-The-Castle.html" data-id="clayy88cc00006owh7t216fao" data-title="[USACO] Section 2.1 The Castle" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -555,6 +570,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html">[USACO] Section 2.3 Cow Pedigrees</a>
+          </li>
         
           <li>
             <a href="/2022-12-09-USACO-Section-2-3-Longest-Prefix.html">[USACO] Section 2.3 Longest Prefix</a>
@@ -630,10 +649,6 @@
         
           <li>
             <a href="/2022-11-06-USACO-Section-1-4-Combination-Lock.html">[USACO] Section 1.4 Combination Lock</a>
-          </li>
-        
-          <li>
-            <a href="/2022-11-05-USACO-Section-1-4-Prime-Cryptarithm.html">[USACO] Section 1.4 Prime Cryptarithm</a>
           </li>
         
       </ul>

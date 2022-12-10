@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>[USACO] Section 2.3 Cow Pedigrees | PenYi1994</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="經典DP題:給定 數N 樹高K請問有幾種degree為0或2的二元樹? 首先當然可以很輕易地想到DP狀態轉移是 : 左子樹方法數乘以右子樹方法數也就是以定義狀態為f(x, y) : 用x個點, 高度y, 能弄出幾種那麼在狀態轉移時 f(x, y) &#x3D; sum(f(k, h1) * f(x - k - 1, h2)) 其中 1 &lt;&#x3D; k &lt;&#x3D; x-1, 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[USACO] Section 2.3 Cow Pedigrees">
+<meta property="og:url" content="https://penyi1994.github.io/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html">
+<meta property="og:site_name" content="PenYi1994">
+<meta property="og:description" content="經典DP題:給定 數N 樹高K請問有幾種degree為0或2的二元樹? 首先當然可以很輕易地想到DP狀態轉移是 : 左子樹方法數乘以右子樹方法數也就是以定義狀態為f(x, y) : 用x個點, 高度y, 能弄出幾種那麼在狀態轉移時 f(x, y) &#x3D; sum(f(k, h1) * f(x - k - 1, h2)) 其中 1 &lt;&#x3D; k &lt;&#x3D; x-1, 1">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-12-10T16:44:29.002Z">
+<meta property="article:author" content="PenYi">
+<meta property="article:tag" content="USACO">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="PenYi1994" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">PenYi1994</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">Algorithm, Compiler, C++, Pwn</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/links">Links</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://penyi1994.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-USACO-Section-2-3-Cow-Pedigrees" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html" class="article-date">
+  <time class="dt-published" datetime="2022-12-10T16:00:00.000Z" itemprop="datePublished">2022-12-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      [USACO] Section 2.3 Cow Pedigrees
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>經典DP題:<br>給定 數N 樹高K<br>請問有幾種degree為0或2的二元樹?</p>
+<p>首先<br>當然可以很輕易地想到DP狀態轉移是 : 左子樹方法數乘以右子樹方法數<br>也就是以定義狀態為f(x, y) : 用x個點, 高度y, 能弄出幾種<br>那麼在狀態轉移時</p>
+<p>f(x, y) &#x3D; sum(f(k, h1) * f(x - k - 1, h2))</p>
+<p>其中 1 &lt;&#x3D; k &lt;&#x3D; x-1, 1 &lt;&#x3D; h1, h2 &lt;&#x3D; y-1</p>
+<p>k為左子樹的點數<br>x-k-1為柚子樹的點數</p>
+<p>h1為左子樹的高度<br>h2為柚子樹的高度</p>
+<p>赫然發現<br>問題變得更複雜了!!<br>居然要枚舉三個維度 : 左&#x2F;右子樹點數, 左子樹高度, 柚子樹高度<br>才能完成狀態轉移</p>
+<p>*「DP心得之一 : 狀態的選擇是很重要滴!!」</p>
+<p>把DP狀態改成 : f(x, y)為用x個點, 湊出「最大高度為y」的方法數<br>狀態轉移為f(x, y) &#x3D; sum(f(k, y-1) * f(x-k-1, y-1)), 1 &lt;&#x3D; k &lt;&#x3D; x-1</p>
+<p>則題目要求的剛好高度為y的方法數就是f(x, y) - f(x, y-1)</p>
+<p>用比較複雜的問題來解原問題, 反而比較比較輕鬆<br>其實大學何錦文教授有講過類似的概念<br>不過那時也沒在聽就是了<br>嘻嘻</p>
+<p>其實這題還有後續</p>
+<p>*「DP心得之二 : 狀態轉移是很重要滴!!」</p>
+<p>因為左右子樹長相是對稱的<br>所以還能省一半轉移的時間</p>
+<p>但注意兩邊點數一樣話就是同一種</p>
+<p>最後補充一下<br>所謂degree為0或2其實隱含的被描述在<br>狀態轉移時的k的範圍是 1 ~ x-2, 不可以有一邊的點數是0</p>
+<p>也就是說這題還能再推廣成「真正的」二元樹的方法數</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: nocows</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">ID: penyi191</span></span><br><span class="line"><span class="comment">TASK: nocows</span></span><br><span class="line"><span class="comment">LANG: C++</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;fstream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cin fin</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> cout fout</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="function">ofstream <span class="title">fout</span> <span class="params">(<span class="string">&quot;nocows.out&quot;</span>)</span></span>;</span><br><span class="line">  <span class="function">ifstream <span class="title">fin</span> <span class="params">(<span class="string">&quot;nocows.in&quot;</span>)</span></span>;</span><br><span class="line">  </span><br><span class="line">  <span class="type">int</span> N, H;</span><br><span class="line">  <span class="type">int</span> dp[<span class="number">201</span>][<span class="number">101</span>]; <span class="comment">// dp[i][j] for use i node, at most j height</span></span><br><span class="line">  </span><br><span class="line">  cin &gt;&gt; N &gt;&gt; H;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">memset</span>(dp, <span class="number">0</span>, <span class="built_in">sizeof</span>(dp));</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= H; i++)</span><br><span class="line">    dp[<span class="number">1</span>][i] = <span class="number">1</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= N; i++)</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">1</span>; j &lt;= H; j++) </span><br><span class="line">      <span class="keyword">for</span> (<span class="type">int</span> k = <span class="number">1</span>; k &lt;= (i - <span class="number">1</span>) / <span class="number">2</span>; k++) </span><br><span class="line">        <span class="keyword">if</span> (k * <span class="number">2</span> == i<span class="number">-1</span>)</span><br><span class="line">          dp[i][j] = (dp[i][j] + dp[k][j - <span class="number">1</span>] * dp[i - k - <span class="number">1</span>][j - <span class="number">1</span>]) % <span class="number">9901</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">          dp[i][j] = (dp[i][j] + <span class="number">2</span> * dp[k][j - <span class="number">1</span>] * dp[i - k - <span class="number">1</span>][j - <span class="number">1</span>]) % <span class="number">9901</span>;</span><br><span class="line"></span><br><span class="line">  cout &lt;&lt; (dp[N][H] - dp[N][H - <span class="number">1</span>] + <span class="number">9901</span>) % <span class="number">9901</span> &lt;&lt; endl;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://penyi1994.github.io/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html" data-id="clbi4j6w30000cwwh59zj9080" data-title="[USACO] Section 2.3 Cow Pedigrees" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022-12-09-USACO-Section-2-3-Longest-Prefix.html" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">[USACO] Section 2.3 Longest Prefix</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/USACO/" rel="tag">USACO</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/USACO/" style="font-size: 10px;">USACO</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022-12-11-USACO-Section-2-3-Cow-Pedigrees.html">[USACO] Section 2.3 Cow Pedigrees</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-09-USACO-Section-2-3-Longest-Prefix.html">[USACO] Section 2.3 Longest Prefix</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-07-USACO-Section-2-2-Party-Lamps.html">[USACO] Section 2.2 Party Lamps</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-04-USACO-Section-2-2-Runaround-Numbers.html">[USACO] Section 2.2 Runaround Numbers</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-04-USACO-Section-2-2-Subset-Sums.html">[USACO] Section 2.2 Subset Sums</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-03-USACO-Section-2-2-Preface-Numbering.html">[USACO] Section 2.2 Preface Numbering</a>
+          </li>
+        
+          <li>
+            <a href="/2022-12-02-USACO-Section-2-1-Hamming-Codes.html">[USACO] Section 2.1 Hamming Codes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-30-USACO-Section-2-1-Healthy-Holsteins.html">[USACO] Section 2.1 Healthy Holsteins</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-29-USACO-Section-2-1-Sorting-a-Three-Valued-Sequence.html">[USACO] Section 2.1 Sorting a Three-Valued Sequence</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-27-USACO-Section-2-1-Ordered-Fractions.html">[USACO] Section 2.1 Ordered Fractions</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-27-USACO-Section-2-1-The-Castle.html">[USACO] Section 2.1 The Castle</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-20-USACO-Section-1-5-Checker-Challenge.html">[USACO] Section 1.5 Checker Challenge</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-19-USACO-Section-1-6-Superprime-Rib.html">[USACO] Section 1.6 Superprime Rib</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-19-USACO-Section-1-6-Prime-Palindromes.html">[USACO] Section 1.6 Prime Palindromes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-13-USACO-Section-1-6-Number-Triangles.html">[USACO] Section 1.6 Number Triangles</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-13-USACO-Section-1-5-Mother-s-Milk.html">[USACO] Section 1.5 Mother&#39;s Milk</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-5-Arithmetic-Progressions.html">[USACO] Section 1.5 Arithmetic Progressions</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-4-Ski-Course-Design.html">[USACO] Section 1.4 Ski Course Design</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-12-USACO-Section-1-4-Wormholes.html">[USACO] Section 1.4  Wormholes</a>
+          </li>
+        
+          <li>
+            <a href="/2022-11-06-USACO-Section-1-4-Combination-Lock.html">[USACO] Section 1.4 Combination Lock</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 PenYi<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/links" class="mobile-nav-link">Links</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
